@@ -40,11 +40,15 @@ extension MutableCollectionType where Index == Int {
 
 class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     
+    @IBOutlet weak var playbackSlider: UISlider!
     @IBOutlet weak var playButton: UIButton!
     let  player = AudioPlayer()
     var musics = [m]()
     let dataStore=DataStore.sharedInstance
     var playing:Bool=false
+    var uiv:UIView?
+    var uislider:UISlider?
+    var uilbl:UILabel?
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -54,27 +58,67 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         self.navigationItem.leftBarButtonItem=UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addMP3")
         let delegate: AudioPlayerDelegate = self
         player.delegate=delegate
+        uiv = UIView(frame: CGRect(origin: CGPoint(x: tabBarController!.tabBar.frame.minX, y:tabBarController!.tabBar.frame.minY-(tabBarController!.tabBar.frame.height*0.7)), size: CGSize(width: tabBarController!.tabBar.frame.width, height: tabBarController!.tabBar.frame.height * 0.7)))
+        uiv?.backgroundColor=UIColor.groupTableViewBackgroundColor()
+        print(uiv?.frame.minY)
+        uislider = UISlider(frame: CGRect(origin: CGPoint(x: uiv!.frame.midX/2, y: -5), size: CGSize(width: uiv!.frame.width/2, height: uiv!.frame.height
+            )))
+        uislider?.maximumValue=100
+        uislider?.minimumValue=0
+        uislider?.value=50
+        
+        let thumbImage : UIImage = UIImage(named: "glass")!
+        uislider?.setThumbImage(thumbImage, forState: UIControlState.Normal )
+        
+        uislider?.minimumTrackTintColor=UIColor.redColor()
+        uislider?.addTarget(self, action: "sliderTouch:", forControlEvents: .TouchDown)
+        uislider?.addTarget(self, action: "sliderTouchUp:", forControlEvents: .TouchUpInside)
+        uiv?.addSubview(uislider!)
+        uiv?.hidden=true
+        
+        uilbl=UILabel(frame: CGRect(origin: CGPoint(x: uislider!.frame.midX-12, y: uislider!.frame.midY+5), size: CGSize(width: uiv!.frame.width/2, height: 15
+            )))
+        uilbl?.font = UIFont(name: "Avenir-Light", size: 15.0)
+        uiv?.addSubview(uilbl!)
+        tabBarController?.view.addSubview(uiv!)
+        uiv?.hidden=false
+    }
+    
+    func sliderTouch(sender:UISlider!){
+        player.pause()
+    }
+    
+    func sliderTouchUp(sender:UISlider!){
+        player.seekToTime(NSTimeInterval(sender.value / 100 * Float(player.currentItemDuration!)))
+        player.resume()
     }
     
     
+    @IBAction func click(sender: AnyObject) {
+        player.seekToTime(sender.value/100/player.currentItemDuration!)
+        
+    }
     @IBAction func play(sender: AnyObject) {
         print("play")
         if player.items==nil && musics.count > 0 {
             randomPlay(self)
             return
         }
-        handlePlayButton()
+        let state = String(player.state)
+        if state == "Playing" {
+            player.pause()
+        }else{
+            player.resume()
+        }
     }
     
     func handlePlayButton(){
         if playing == true {
             player.pause()
             playing=false
-            playButton.setImage(UIImage(named: "play"), forState: .Normal)
         }else{
             player.resume()
             playing=true
-            playButton.setImage(UIImage(named: "pause"), forState: .Normal)
         }
     }
     
@@ -86,11 +130,8 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
             let item = AudioItem(highQualitySoundURL: NSURL(fileURLWithPath: path2))
             ais.append(item!)
         }
-        print(ais)
         ais.shuffleInPlace()
         player.playItems(ais)
-        playing=true
-        playButton.setImage(UIImage(named: "pause"), forState: .Normal)
     }
     
     override func didReceiveMemoryWarning() {
@@ -241,7 +282,22 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     }
     
     func audioPlayer(audioPlayer: AudioPlayer, didChangeStateFrom from: AudioPlayerState, toState to: AudioPlayerState){
-        print("change state")
+        print("change state\(to)")
+        let state = String(to)
+        if state == "Paused" || state == "Stopped" {
+            playButton.setImage(UIImage(named: "play"), forState: .Normal)
+            if state == "Stopped" {
+                uilbl?.text="0:00"
+            }
+        }else{
+            playButton.setImage(UIImage(named: "pause"), forState: .Normal)
+        }
+        guard state == "Playing" || state == "Paused"  else {
+            uiv?.hidden=true
+            return
+        }
+        uiv?.hidden=false
+        
     }
     
     /**
@@ -267,6 +323,11 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
      */
     func audioPlayer(audioPlayer: AudioPlayer, didUpdateProgressionToTime time: NSTimeInterval, percentageRead: Float){
         //print("progrss:\(time)")
+        uislider?.value=percentageRead
+        guard time > 0 else{
+            return
+        }
+        uilbl?.text="\(Int(floor(time/60))):\(String(format: "%02d", Int(trunc(time - floor(time/60) * 60))))"
     }
     
     /**
