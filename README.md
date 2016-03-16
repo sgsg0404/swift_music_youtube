@@ -3,12 +3,17 @@
 I am going to develop an music app which can download music from youtube to the app as local musics
 
 Functions:
+
 "download music mp3 with progress bar"
+
 "lock screen playing"
+
 "play list"
+
 "slider with times"
 
 To be finsihed:
+
 "list of download task on table"
 
 Libraries or Api used:
