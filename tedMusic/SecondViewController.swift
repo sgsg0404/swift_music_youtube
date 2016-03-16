@@ -59,7 +59,13 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         let delegate: AudioPlayerDelegate = self
         player.delegate=delegate
         uiv = UIView(frame: CGRect(origin: CGPoint(x: tabBarController!.tabBar.frame.minX, y:tabBarController!.tabBar.frame.minY-(tabBarController!.tabBar.frame.height*0.7)), size: CGSize(width: tabBarController!.tabBar.frame.width, height: tabBarController!.tabBar.frame.height * 0.7)))
-        uiv?.backgroundColor=UIColor.groupTableViewBackgroundColor()
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Light)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = (uiv?.bounds)!
+        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight] // for supporting device rotation
+        uiv?.addSubview(blurEffectView)
+        
+        
         print(uiv?.frame.minY)
         uislider = UISlider(frame: CGRect(origin: CGPoint(x: uiv!.frame.midX/2, y: -5), size: CGSize(width: uiv!.frame.width/2, height: uiv!.frame.height
             )))
@@ -81,7 +87,7 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         uilbl?.font = UIFont(name: "Avenir-Light", size: 15.0)
         uiv?.addSubview(uilbl!)
         tabBarController?.view.addSubview(uiv!)
-        uiv?.hidden=false
+        uiv?.hidden=true
     }
     
     func sliderTouch(sender:UISlider!){
