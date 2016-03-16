@@ -40,7 +40,6 @@ extension MutableCollectionType where Index == Int {
 
 class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     
-    @IBOutlet weak var playbackSlider: UISlider!
     @IBOutlet weak var playButton: UIButton!
     let  player = AudioPlayer()
     var musics = [m]()
@@ -52,21 +51,32 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        loadMp3()
+        
+        // nav button
         self.navigationController!.navigationBar.tintColor=UIColor.redColor()
         self.navigationItem.rightBarButtonItem=UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "loadMp3")
         self.navigationItem.leftBarButtonItem=UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addMP3")
-        let delegate: AudioPlayerDelegate = self
-        player.delegate=delegate
+        
+        // player
+        loadMp3()
+        player.delegate=self
+        
+        // view
+        setupView()
+        
+    }
+    
+    func setupView(){
+        //uiview
         uiv = UIView(frame: CGRect(origin: CGPoint(x: tabBarController!.tabBar.frame.minX, y:tabBarController!.tabBar.frame.minY-(tabBarController!.tabBar.frame.height*0.7)), size: CGSize(width: tabBarController!.tabBar.frame.width, height: tabBarController!.tabBar.frame.height * 0.7)))
         let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Light)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = (uiv?.bounds)!
         blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight] // for supporting device rotation
         uiv?.addSubview(blurEffectView)
+        uiv?.hidden=true
         
-        
-        print(uiv?.frame.minY)
+        // slider
         uislider = UISlider(frame: CGRect(origin: CGPoint(x: uiv!.frame.midX/2, y: -5), size: CGSize(width: uiv!.frame.width/2, height: uiv!.frame.height
             )))
         uislider?.maximumValue=100
@@ -79,16 +89,20 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         uislider?.minimumTrackTintColor=UIColor.redColor()
         uislider?.addTarget(self, action: "sliderTouch:", forControlEvents: .TouchDown)
         uislider?.addTarget(self, action: "sliderTouchUp:", forControlEvents: .TouchUpInside)
-        uiv?.addSubview(uislider!)
-        uiv?.hidden=true
         
+        
+        // time label
         uilbl=UILabel(frame: CGRect(origin: CGPoint(x: uislider!.frame.midX-12, y: uislider!.frame.midY+5), size: CGSize(width: uiv!.frame.width/2, height: 15
             )))
         uilbl?.font = UIFont(name: "Avenir-Light", size: 15.0)
+        
+        
+        // add subview
+        uiv?.addSubview(uislider!)
         uiv?.addSubview(uilbl!)
         tabBarController?.view.addSubview(uiv!)
-        uiv?.hidden=true
     }
+    
     
     func sliderTouch(sender:UISlider!){
         player.pause()
@@ -99,11 +113,6 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         player.resume()
     }
     
-    
-    @IBAction func click(sender: AnyObject) {
-        player.seekToTime(sender.value/100/player.currentItemDuration!)
-        
-    }
     @IBAction func play(sender: AnyObject) {
         print("play")
         if player.items==nil && musics.count > 0 {
