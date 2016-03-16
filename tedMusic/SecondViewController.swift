@@ -141,7 +141,7 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         let passwordPrompt = UIAlertController(title: "Youtube Link", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
         passwordPrompt.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default, handler: nil))
         passwordPrompt.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
-
+            
             guard (inputTextField?.text != nil && inputTextField?.text != "") else {
                 return
             }
@@ -158,9 +158,16 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     }
     
     func sendRequest(youtubeLink:String){
-        let newString = youtubeLink.stringByReplacingOccurrencesOfString("http://youtu.be/", withString: "https://www.youtube.com/watch?v=", options: NSStringCompareOptions.LiteralSearch, range: nil)
-        print(newString)
-        DataConnectionManager.getJSON("loadData",link:newString,nc: self.navigationController!, resultJSON: { (result: JSON) -> Void in
+        var newlink:String?
+        if youtubeLink.rangeOfString("http://youtu.be/") != nil{
+            newlink = youtubeLink.stringByReplacingOccurrencesOfString("http://youtu.be/", withString: "https://www.youtube.com/watch?v=", options: NSStringCompareOptions.LiteralSearch, range: nil)
+        }else if youtubeLink.rangeOfString("https://m.youtube.com/watch?v=") != nil{
+            newlink = youtubeLink.stringByReplacingOccurrencesOfString("https://m.youtube.com/watch?v=", withString: "https://www.youtube.com/watch?v=", options: NSStringCompareOptions.LiteralSearch, range: nil)
+        }
+        guard let _ = newlink else{
+            return;
+        }
+        DataConnectionManager.getJSON("loadData",link:newlink!,nc: self.navigationController!, resultJSON: { (result: JSON) -> Void in
             print(result)
             guard result["success"] == "true" else{
                 
@@ -169,6 +176,7 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
             print("success")
             self.downloadWithAlert(result["link"].stringValue)
         })
+        
     }
     
     
