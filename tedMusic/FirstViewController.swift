@@ -17,6 +17,9 @@ class FirstViewController: UIViewController  {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        self.navigationController!.navigationBar.tintColor=UIColor.redColor()
+        self.navigationItem.rightBarButtonItem=UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "reload")
+        self.navigationItem.leftBarButtonItem=UIBarButtonItem(barButtonSystemItem: .Reply, target: self, action: "back")
         w.backgroundColor=UIColor.whiteColor()
         do {
             try dataStore.createTables()
@@ -31,5 +34,13 @@ class FirstViewController: UIViewController  {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    func reload(){
+        w.reload()
+    }
+    func back(){
+        w.goBack()
+    }
+    
 }
 
