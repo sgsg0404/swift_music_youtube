@@ -40,7 +40,6 @@ extension MutableCollectionType where Index == Int {
 
 class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     
-    @IBOutlet weak var playButton: UIButton!
     let  player = AudioPlayer()
     var musics = [m]()
     let dataStore=DataStore.sharedInstance
@@ -48,6 +47,7 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     var uiv:UIView?
     var uislider:UISlider?
     var uilbl:UILabel?
+    var uiplay:UIButton?
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -63,7 +63,7 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         
         // view
         setupView()
-        
+                NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("loadMp3:"), name: "loadMp3", object: nil)
     }
     
     func setupView(){
@@ -97,12 +97,24 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         uilbl?.font = UIFont(name: "Avenir-Light", size: 15.0)
         
         
+        uiplay=UIButton(frame: CGRect(origin: CGPoint(x: 12, y: (uiv?.frame.size.height)!/2/2/2), size: CGSize(width: 30, height: 30
+            )))
+        
+        uiplay?.setImage(UIImage(named: "play"), forState: .Normal)
+        uiplay?.addTarget(self, action: "play:",forControlEvents:.TouchUpInside)
         // add subview
         uiv?.addSubview(uislider!)
         uiv?.addSubview(uilbl!)
+        uiv?.addSubview(uiplay!)
         tabBarController?.view.addSubview(uiv!)
+        
+        print("\(uiv?.frame.size.height)")
+        print("\(uiv?.frame.minY)")
+        print("\(uiv?.frame.maxY)")
+        print("\(uiplay?.frame.minY)")
     }
     
+
     
     func sliderTouch(sender:UISlider!){
         player.pause()
@@ -113,12 +125,8 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         player.resume()
     }
     
-    @IBAction func play(sender: AnyObject) {
+    func play(sender: AnyObject) {
         print("play")
-        if player.items==nil && musics.count > 0 {
-            randomPlay(self)
-            return
-        }
         let state = String(player.state)
         if state == "Playing" {
             player.pause()
@@ -156,7 +164,7 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         playing=true
-        playButton.setImage(UIImage(named: "pause"), forState: .Normal)
+        uiplay!.setImage(UIImage(named: "pause"), forState: .Normal)
         self.title=musics[indexPath.row].name!
         let path2 = dataStore.getPathByFileName(musics[indexPath.row].name!)
         let item = AudioItem(highQualitySoundURL: NSURL(fileURLWithPath: path2))
@@ -300,12 +308,12 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         print("change state\(to)")
         let state = String(to)
         if state == "Paused" || state == "Stopped" {
-            playButton.setImage(UIImage(named: "play"), forState: .Normal)
+            uiplay!.setImage(UIImage(named: "play"), forState: .Normal)
             if state == "Stopped" {
                 uilbl?.text="0:00"
             }
         }else{
-            playButton.setImage(UIImage(named: "pause"), forState: .Normal)
+            uiplay!.setImage(UIImage(named: "pause"), forState: .Normal)
         }
         guard state == "Playing" || state == "Paused"  else {
             uiv?.hidden=true
@@ -377,7 +385,7 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
      - parameter item:        Current item.
      */
     func audioPlayer(audioPlayer: AudioPlayer, didLoadRange range: AudioPlayer.TimeRange, forItem item: AudioItem){
-        print("timerange")
+        //print("timerange")
     }
     
     

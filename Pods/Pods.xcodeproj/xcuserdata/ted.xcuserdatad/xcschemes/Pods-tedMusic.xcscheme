@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'E1B7D221E9D63C2161113CD9'
+               BlueprintIdentifier = '29A241B6502A16065114C701'
                BlueprintName = 'Pods-tedMusic'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'Pods_tedMusic.framework'>
