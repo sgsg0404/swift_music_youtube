@@ -13,6 +13,7 @@ class FirstViewController: UIViewController  {
     
     let dataStore=DataStore.sharedInstance
     var uiv:UIView?
+    var a=0,d=0,s=0
     @IBOutlet var w: UIWebView!
     
     override func viewDidLoad() {
@@ -30,16 +31,18 @@ class FirstViewController: UIViewController  {
         let requestObj = NSURLRequest(URL: url!);
         w.loadRequest(requestObj);
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("pastechanged:"), name: UIPasteboardChangedNotification, object: nil)
-        self.title = "!23"
-        
     }
     
-    func showStatus(color : UIColor){
-        uiv?.removeFromSuperview()
-        uiv = UIView(frame: CGRect(origin: CGPoint(x: (navigationController!.view.frame.size.width-(tabBarController!.tabBar.frame.width*0.6))/2, y:navigationController!.view.frame.minY), size: CGSize(width: tabBarController!.tabBar.frame.width*0.6, height: self.navigationController!.navigationBar.frame.maxY)))
-        uiv!.backgroundColor = color
-        navigationController!.view.addSubview(uiv!)
-        
+    
+    //    func showStatus(color : UIColor){
+    //        uiv?.removeFromSuperview()
+    //        uiv = UIView(frame: CGRect(origin: CGPoint(x: (navigationController!.view.frame.size.width-(tabBarController!.tabBar.frame.width*0.6))/2, y:navigationController!.view.frame.minY), size: CGSize(width: tabBarController!.tabBar.frame.width*0.6, height: self.navigationController!.navigationBar.frame.maxY)))
+    //        uiv!.backgroundColor = color
+    //        navigationController!.view.addSubview(uiv!)
+    //
+    //    }
+    func getStatus()->String{
+        return "Added:\(a)|DL:\(d)|Success:\(s)"
     }
     
     func pastechanged(sender : NSNotification){
@@ -65,22 +68,28 @@ class FirstViewController: UIViewController  {
     func sendRequest(youtubeLink:String){
         var newlink:String?
         if youtubeLink.rangeOfString("http://youtu.be/") != nil{
-            newlink = youtubeLink.stringByReplacingOccurrencesOfString("http://youtu.be/", withString: "https://www.youtube.com/watch?v=", options: NSStringCompareOptions.LiteralSearch, range: nil)
+            newlink = youtubeLink.stringByReplacingOccurrencesOfString("http://youtu.be/", withString: "https://www.yt-mp3.com/watch?v=", options: NSStringCompareOptions.LiteralSearch, range: nil)
+            print(newlink)
         }else if youtubeLink.rangeOfString("https://m.youtube.com/watch?v=") != nil{
-            newlink = youtubeLink.stringByReplacingOccurrencesOfString("https://m.youtube.com/watch?v=", withString: "https://www.youtube.com/watch?v=", options: NSStringCompareOptions.LiteralSearch, range: nil)
+            newlink = youtubeLink.stringByReplacingOccurrencesOfString("https://m.youtube.com/watch?v=", withString: "https://www.yt-mp3.com/watch?v=", options: NSStringCompareOptions.LiteralSearch, range: nil)
+            print(newlink)
         }
         guard let _ = newlink else{
             return;
         }
+        a += 1
+        self.title = getStatus()
         DataConnectionManager.getJSON("loadData",link:newlink!,nc: self.navigationController!, resultJSON: { (result: JSON) -> Void in
             print(result)
             guard result["success"] == "true" else{
                 
                 return
             }
-            self.showStatus(UIColor.redColor())
             print("success")
-            self.downloadWithAlert(result["link"].stringValue)
+            self.a -= 1
+            self.d += 1
+            self.title = self.getStatus()
+            self.downloadWithAlert(result["url"].stringValue)
         })
         
     }
@@ -99,9 +108,14 @@ class FirstViewController: UIViewController  {
                 if let error = error {
                     print("Failed with error: \(error)")
                 } else {
-                    self.showStatus(UIColor.blueColor())
+                    //self.showStatus(UIColor.blueColor())
                     print("Downloaded file successfully")
-                    
+                    self.d -= 1
+                    self.s += 1
+                    self.title = self.getStatus()
+                    dispatch_async(dispatch_get_main_queue()) {
+                    NSNotificationCenter.defaultCenter().postNotificationName("loadMp3", object: nil)
+                    }
                 }
                 
         }

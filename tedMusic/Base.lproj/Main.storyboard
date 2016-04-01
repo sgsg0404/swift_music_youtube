@@ -57,13 +57,19 @@
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x95-m8-amb">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x95-m8-amb">
                                             <rect key="frame" x="8" y="11" width="584" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="x95-m8-amb" firstAttribute="leading" secondItem="qtv-hQ-cC0" secondAttribute="leadingMargin" id="ZGA-Xl-rac"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="x95-m8-amb" secondAttribute="bottom" constant="3" id="v7Z-4r-nma"/>
+                                        <constraint firstItem="x95-m8-amb" firstAttribute="trailing" secondItem="qtv-hQ-cC0" secondAttribute="trailingMargin" id="vD5-RN-eyJ"/>
+                                        <constraint firstItem="x95-m8-amb" firstAttribute="top" secondItem="qtv-hQ-cC0" secondAttribute="topMargin" constant="3" id="wD7-J1-5TX"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="lblName" destination="x95-m8-amb" id="9aw-RO-il2"/>

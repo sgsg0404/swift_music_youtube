@@ -41,22 +41,21 @@ public class DataConnectionManager {
         switch(AppModule) {
             
         case "loadData":
-            let sss = "https://www.youtubeinmp3.com/fetch/?format=JSON&video=\(link)"
-            print("real line:\(sss)")
-
+            let sss = link
+            print("real line:\(link)")         
             dcm.alamoFireManager.request(.GET, sss)
-                .responseJSON { response in switch response.result {
-                case .Success(_):
-                    print("Success with JSON")
-                    print(response.result.value!)
-                    var data=SwiftyJSON.JSON(response.result.value!)
-                    data["success"]="true"
-
-                    resultJSON(data)
-
-                case .Failure(let error):
-                    print("Request failed with error: \(error)")
+                .responseString { response in
+                    print("Success: \(response.result.isSuccess)")
+                    //print("Response String: \(response.result.value)")
+                    let matches = dcm.matchesForRegexInText("(\\{\"status\":\"ok\".*\\}, \\{)", text: response.result.value)
+                    let newlink = matches[0].stringByReplacingOccurrencesOfString(", {", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
+                    if let dataFromString = newlink.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
+                        var json = SwiftyJSON.JSON(data: dataFromString)
+                        print(json["id"])
+                        json["success"] = "true"
+                        resultJSON(json)
                     }
+                    
                     
             }
             
@@ -79,5 +78,18 @@ public class DataConnectionManager {
         AlertViewController.sharedInstance.showAlert(nc, displayTitle: "No Network Connection")
     }
     
+    func matchesForRegexInText(regex: String!, text: String!) -> [String] {
+        
+        do {
+            let regex = try NSRegularExpression(pattern: regex, options: [])
+            let nsString = text as NSString
+            let results = regex.matchesInString(text,
+                options: [], range: NSMakeRange(0, nsString.length))
+            return results.map { nsString.substringWithRange($0.range)}
+        } catch let error as NSError {
+            print("invalid regex: \(error.localizedDescription)")
+            return []
+        }
+    }
     
 }

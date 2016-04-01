@@ -63,10 +63,19 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         
         // view
         setupView()
-                NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("loadMp3:"), name: "loadMp3", object: nil)
+                NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("loadMp3"), name: "loadMp3", object: nil)
     }
     
     func setupView(){
+        let c1 = UIColor(red: 1, green: 0, blue: 0.68, alpha: 1)
+        let c2 = UIColor(red: 1, green: 0, blue: 0.11, alpha: 1)
+        
+        let gr = CAGradientLayer()
+        gr.frame = self.tableView.frame
+        gr.colors = [c1.CGColor,c2.CGColor]
+        self.tableView.layer.insertSublayer(gr, atIndex: 0)
+        
+        
         //uiview
         uiv = UIView(frame: CGRect(origin: CGPoint(x: tabBarController!.tabBar.frame.minX, y:tabBarController!.tabBar.frame.minY-(tabBarController!.tabBar.frame.height*0.7)), size: CGSize(width: tabBarController!.tabBar.frame.width, height: tabBarController!.tabBar.frame.height * 0.7)))
         let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Light)
@@ -224,21 +233,23 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     func sendRequest(youtubeLink:String){
         var newlink:String?
         if youtubeLink.rangeOfString("http://youtu.be/") != nil{
-            newlink = youtubeLink.stringByReplacingOccurrencesOfString("http://youtu.be/", withString: "https://www.youtube.com/watch?v=", options: NSStringCompareOptions.LiteralSearch, range: nil)
+            newlink = youtubeLink.stringByReplacingOccurrencesOfString("http://youtu.be/", withString: "https://www.yt-mp3.com/watch?v=", options: NSStringCompareOptions.LiteralSearch, range: nil)
+            print(newlink)
         }else if youtubeLink.rangeOfString("https://m.youtube.com/watch?v=") != nil{
-            newlink = youtubeLink.stringByReplacingOccurrencesOfString("https://m.youtube.com/watch?v=", withString: "https://www.youtube.com/watch?v=", options: NSStringCompareOptions.LiteralSearch, range: nil)
+            newlink = youtubeLink.stringByReplacingOccurrencesOfString("https://m.youtube.com/watch?v=", withString: "https://www.yt-mp3.com/watch?v=", options: NSStringCompareOptions.LiteralSearch, range: nil)
+            print(newlink)
         }
         guard let _ = newlink else{
             return;
         }
         DataConnectionManager.getJSON("loadData",link:newlink!,nc: self.navigationController!, resultJSON: { (result: JSON) -> Void in
             print(result)
-            guard result["success"] == "true" else{
-                
-                return
-            }
-            print("success")
-            self.downloadWithAlert(result["link"].stringValue)
+//            guard result["success"] == "true" else{
+//                
+//                return
+//            }
+//            print("success")
+//            self.downloadWithAlert(result["link"].stringValue)
         })
         
     }

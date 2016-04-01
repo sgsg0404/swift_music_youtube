@@ -522,7 +522,7 @@
 				INFOPLIST_FILE = tedMusic/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = tedWong.tedMusic;
+				PRODUCT_BUNDLE_IDENTIFIER = tedMusic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -535,7 +535,7 @@
 				INFOPLIST_FILE = tedMusic/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = tedWong.tedMusic;
+				PRODUCT_BUNDLE_IDENTIFIER = tedMusic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
