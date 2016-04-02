@@ -141,11 +141,10 @@ class FirstViewController: UIViewController ,UIWebViewDelegate {
                 if queue.count > 0{
                     let urll = NSURL (string: queue[0]);
                     let requestObj2 = NSURLRequest(URL: urll!);
-                    web.loadRequest(requestObj2);
-                    a += 1
-                    self.title = getStatus()
-                    
+                    web.loadRequest(requestObj2); 
                 }
+                a += 1
+                self.title = getStatus()
                 s?.invalidate()
             }
         }

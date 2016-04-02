@@ -180,10 +180,6 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if(musics.count == 0) {
-            gr.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height*5)
-            self.tableView.layer.insertSublayer(gr, atIndex: 0)
-        }
         return musics.count
     }
     
@@ -204,7 +200,7 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         
         cell.time.text = "\(minutes):\(String(format: "%02d", seconds))"
         
-        if indexPath.row == 0{
+        if indexPath.row == 0 {
             gr.removeFromSuperlayer()
             let h = (cell.frame.size.height * CGFloat(musics.count+1))
             gr.frame = CGRectMake(0, 0, self.view.frame.size.width, h)
@@ -231,10 +227,25 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == UITableViewCellEditingStyle.Delete {
-            DataStore.sharedInstance.removeFile(musics[indexPath.row].name!)
-            loadMp3()
+
             
         }
+    }
+    
+    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]?  {
+        // add the action button you want to show when swiping on tableView's cell , in this case add the delete button.
+        let deleteAction = UITableViewRowAction(style: .Default, title: "Delete", handler: { (action , indexPath) -> Void in
+            DataStore.sharedInstance.removeFile(self.musics[indexPath.row].name!)
+            self.loadMp3()
+            if(self.musics.count == 0 ){
+                self.gr.removeFromSuperlayer()
+            }
+        })
+        
+        // You can set its properties like normal button
+        deleteAction.backgroundColor = UIColor.clearColor()
+        
+        return [deleteAction]
     }
     
     override func remoteControlReceivedWithEvent(event: UIEvent?) {
