@@ -13,7 +13,7 @@ import Alamofire
 import AVFoundation
 struct m {
     var name:String?
-    var size:Int?
+    var size:Float64?
 }
 extension CollectionType {
     /// Return a copy of `self` with its elements shuffled
@@ -48,6 +48,8 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     var uislider:UISlider?
     var uilbl:UILabel?
     var uiplay:UIButton?
+    let gr = CAGradientLayer()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -55,7 +57,7 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         // nav button
         self.navigationController!.navigationBar.tintColor=UIColor.redColor()
         self.navigationItem.rightBarButtonItem=UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "loadMp3")
-        self.navigationItem.leftBarButtonItem=UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addMP3")
+        //        self.navigationItem.leftBarButtonItem=UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addMP3")
         
         // player
         loadMp3()
@@ -63,17 +65,17 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         
         // view
         setupView()
-                NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("loadMp3"), name: "loadMp3", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("loadMp3"), name: "loadMp3", object: nil)
     }
     
     func setupView(){
         let c1 = UIColor(red: 1, green: 0, blue: 0.68, alpha: 1)
         let c2 = UIColor(red: 1, green: 0, blue: 0.11, alpha: 1)
         
-        let gr = CAGradientLayer()
-        gr.frame = self.tableView.frame
+        
         gr.colors = [c1.CGColor,c2.CGColor]
-        self.tableView.layer.insertSublayer(gr, atIndex: 0)
+        
+        
         
         
         //uiview
@@ -117,13 +119,8 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         uiv?.addSubview(uiplay!)
         tabBarController?.view.addSubview(uiv!)
         
-        print("\(uiv?.frame.size.height)")
-        print("\(uiv?.frame.minY)")
-        print("\(uiv?.frame.maxY)")
-        print("\(uiplay?.frame.minY)")
+        
     }
-    
-
     
     func sliderTouch(sender:UISlider!){
         player.pause()
@@ -160,6 +157,7 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         for index in musics {
             let path2 = dataStore.getPathByFileName(index.name!)
             let item = AudioItem(highQualitySoundURL: NSURL(fileURLWithPath: path2))
+            item?.title = index.name!.stringByReplacingOccurrencesOfString(".mp3", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
             ais.append(item!)
         }
         ais.shuffleInPlace()
@@ -174,24 +172,44 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         playing=true
         uiplay!.setImage(UIImage(named: "pause"), forState: .Normal)
-        self.title=musics[indexPath.row].name!
         let path2 = dataStore.getPathByFileName(musics[indexPath.row].name!)
         let item = AudioItem(highQualitySoundURL: NSURL(fileURLWithPath: path2))
+        item?.title = musics[indexPath.row].name!.stringByReplacingOccurrencesOfString(".mp3", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
         player.playItems([item!])
         
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if(musics.count == 0) {
+            gr.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height*5)
+            self.tableView.layer.insertSublayer(gr, atIndex: 0)
+        }
         return musics.count
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         // Table view cells are reused and should be dequeued using a cell identifier.
         let cellIdentifier = "TableViewCell"
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! TableViewCell
         
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! TableViewCell
+        cell.backgroundColor = UIColor.clearColor()
         
         cell.lblName.text = "\(musics[indexPath.row].name!)"
+        
+        let ti = NSInteger(musics[indexPath.row].size!)
+        
+        let seconds = ti % 60
+        let minutes = (ti / 60) % 60
+        
+        
+        cell.time.text = "\(minutes):\(String(format: "%02d", seconds))"
+        
+        if indexPath.row == 0{
+            gr.removeFromSuperlayer()
+            let h = (cell.frame.size.height * CGFloat(musics.count+1))
+            gr.frame = CGRectMake(0, 0, self.view.frame.size.width, h)
+            self.tableView.layer.insertSublayer(gr, atIndex: 0)
+        }
         
         return cell
     }
@@ -201,107 +219,16 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         let files=NSFileManager().enumeratorAtPath(NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory,
             NSSearchPathDomainMask.AllDomainsMask, true)[0])
         while let file = files?.nextObject(){
+            
             let fileName = "\(file)"
+            
             if fileName.rangeOfString(".mp3") != nil {
-                musics.append(m(name:"\(file)",size:6))
+                musics.append(m(name:"\(file)",size:dataStore.checkTime(dataStore.getPathByFileName(fileName))))
             }
         }
         self.tableView.reloadData()
     }
     
-    func addMP3(){
-        var inputTextField: UITextField?
-        let passwordPrompt = UIAlertController(title: "Youtube Link", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-        passwordPrompt.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default, handler: nil))
-        passwordPrompt.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
-            
-            guard (inputTextField?.text != nil && inputTextField?.text != "") else {
-                return
-            }
-            self.sendRequest((inputTextField?.text)!)
-        }))
-        passwordPrompt.addTextFieldWithConfigurationHandler({(textField: UITextField!) in
-            textField.placeholder = "Enter youtube link"
-            inputTextField = textField
-        })
-        
-        self.navigationController!.presentViewController(passwordPrompt, animated: true, completion: nil)
-        
-        
-    }
-    
-    func sendRequest(youtubeLink:String){
-        var newlink:String?
-        if youtubeLink.rangeOfString("http://youtu.be/") != nil{
-            newlink = youtubeLink.stringByReplacingOccurrencesOfString("http://youtu.be/", withString: "https://www.yt-mp3.com/watch?v=", options: NSStringCompareOptions.LiteralSearch, range: nil)
-            print(newlink)
-        }else if youtubeLink.rangeOfString("https://m.youtube.com/watch?v=") != nil{
-            newlink = youtubeLink.stringByReplacingOccurrencesOfString("https://m.youtube.com/watch?v=", withString: "https://www.yt-mp3.com/watch?v=", options: NSStringCompareOptions.LiteralSearch, range: nil)
-            print(newlink)
-        }
-        guard let _ = newlink else{
-            return;
-        }
-        DataConnectionManager.getJSON("loadData",link:newlink!,nc: self.navigationController!, resultJSON: { (result: JSON) -> Void in
-            print(result)
-//            guard result["success"] == "true" else{
-//                
-//                return
-//            }
-//            print("success")
-//            self.downloadWithAlert(result["link"].stringValue)
-        })
-        
-    }
-    
-    
-    private func downloadWithAlert(link:String){
-        let newString = link.stringByReplacingOccurrencesOfString("http", withString: "https", options: NSStringCompareOptions.LiteralSearch, range: nil)
-        print(newString)
-        // create controller with style as Alert
-        let alertCtrl = UIAlertController(title: "downloading", message: "      ", preferredStyle: UIAlertControllerStyle.Alert )
-        
-        // create button action
-        
-        
-        let cancelAction = UIAlertAction(title: "cancel", style: UIAlertActionStyle.Default, handler: nil)
-        // add action to controller
-        
-        
-        alertCtrl.addAction(cancelAction)
-        let progressView = UIProgressView()
-        // show alert
-        self.navigationController!.presentViewController(alertCtrl, animated: true, completion: {
-            //  Add your progressbar after alert is shown (and measured)
-            let margin:CGFloat = 8.0
-            let rect = CGRectMake(margin, 72.0, alertCtrl.view.frame.width - margin * 2.0 , 2.0)
-            progressView.frame=rect
-            progressView.setProgress(0, animated: true)
-            alertCtrl.view.addSubview(progressView)
-        })
-        
-        Alamofire.download(.GET, newString, destination: DataStore.sharedInstance.destination)
-            .progress { bytesRead, totalBytesRead, totalBytesExpectedToRead in
-                dispatch_async(dispatch_get_main_queue()) {
-                    let progress = Float(totalBytesRead) / Float(totalBytesExpectedToRead)
-                    
-                    progressView.progress=progress
-                    alertCtrl.message="\(Int(progress*100))%"
-                }
-            }
-            .response { request, response, _, error in
-                
-                if let error = error {
-                    print("Failed with error: \(error)")
-                } else {
-                    print("Downloaded file successfully")
-                    self.loadMp3()
-                }
-                
-                alertCtrl.dismissViewControllerAnimated(true, completion: nil)
-        }
-        
-    }
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == UITableViewCellEditingStyle.Delete {
             DataStore.sharedInstance.removeFile(musics[indexPath.row].name!)
@@ -309,6 +236,7 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
             
         }
     }
+    
     override func remoteControlReceivedWithEvent(event: UIEvent?) {
         if let event = event {
             player.remoteControlReceivedWithEvent(event)
@@ -334,27 +262,13 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         
     }
     
-    /**
-     This method is called when the audio player is about to start playing
-     a new item.
-     
-     - parameter audioPlayer: The audio player.
-     - parameter item:        The item that is about to start being played.
-     */
+    
     func audioPlayer(audioPlayer: AudioPlayer, willStartPlayingItem item: AudioItem){
         print("start")
+        self.title = item.title
     }
     
-    /**
-     This method is called a regular time interval while playing. It notifies
-     the delegate that the current playing progression changed.
-     
-     - parameter audioPlayer:    The audio player.
-     - parameter time:           The current progression.
-     - parameter percentageRead: The percentage of the file that has been read.
-     It's a Float value between 0 & 100 so that you can
-     easily update an `UISlider` for example.
-     */
+    
     func audioPlayer(audioPlayer: AudioPlayer, didUpdateProgressionToTime time: NSTimeInterval, percentageRead: Float){
         //print("progrss:\(time)")
         uislider?.value=percentageRead
@@ -364,37 +278,17 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         uilbl?.text="\(Int(floor(time/60))):\(String(format: "%02d", Int(trunc(time - floor(time/60) * 60))))"
     }
     
-    /**
-     This method gets called when the current item duration has been found.
-     
-     - parameter audioPlayer: The audio player.
-     - parameter duration:    Current item's duration.
-     - parameter item:        Current item.
-     */
+    
     func audioPlayer(audioPlayer: AudioPlayer, didFindDuration duration: NSTimeInterval, forItem item: AudioItem){
         print("duration:\(duration)")
     }
     
-    /**
-     This methods gets called before duration gets updated with discovered metadata.
-     
-     - parameter audioPlayer: The audio player.
-     - parameter item:        Found metadata.
-     - parameter data:        Current item.
-     */
+    
     func audioPlayer(audioPlayer: AudioPlayer, didUpdateEmptyMetadataOnItem item: AudioItem, withData data: Metadata){
         print("empty")
     }
     
-    /**
-     This method gets called while the audio player is loading the file (over
-     the network or locally). It lets the delegate know what time range has
-     already been loaded.
-     
-     - parameter audioPlayer: The audio player.
-     - parameter range:       The time range that the audio player loaded.
-     - parameter item:        Current item.
-     */
+    
     func audioPlayer(audioPlayer: AudioPlayer, didLoadRange range: AudioPlayer.TimeRange, forItem item: AudioItem){
         //print("timerange")
     }

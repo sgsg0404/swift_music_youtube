@@ -10,6 +10,7 @@ import Foundation
 import SQLite
 import UIKit
 import Alamofire
+import AVFoundation
 enum DataAccessError: ErrorType {
     case Datastore_Connection_Error
     case Insert_Error
@@ -81,12 +82,17 @@ class DataStore {
         
     }
     
-    
+    func checkTime(pathString:String)->Float64{
+        let asset = AVURLAsset(URL: NSURL(fileURLWithPath: pathString), options: nil)
+        let audioDuration = asset.duration
+        let audioDurationSeconds = CMTimeGetSeconds(audioDuration)
+        return audioDurationSeconds
+    }
     
     func checkFileExist(fileName:String)->Bool{
         let path=dir!.stringByAppendingPathComponent(fileName)
         if fileManager.fileExistsAtPath(path){
-                return true
+            return true
         }
         return false
     }
@@ -119,7 +125,7 @@ class DataStore {
         }catch _{}
     }
     
-
+    
     
     func removeAllFiles(){
         let files=NSFileManager().enumeratorAtPath(NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory,

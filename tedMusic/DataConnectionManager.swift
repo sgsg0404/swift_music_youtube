@@ -5,12 +5,12 @@
 //  Created by Apps Lab Admin on 9/3/2016.
 //  Copyright © 2016 CItyUAppsLab. All rights reserved.
 //
-
+import UIKit
 import Foundation
 import Alamofire
 import SwiftyJSON
 import ReachabilitySwift
-public class DataConnectionManager {
+public class DataConnectionManager{
     
     static let sharedInstance = DataConnectionManager()
     var reachability: Reachability?
@@ -41,23 +41,7 @@ public class DataConnectionManager {
         switch(AppModule) {
             
         case "loadData":
-            let sss = link
-            print("real line:\(link)")         
-            dcm.alamoFireManager.request(.GET, sss)
-                .responseString { response in
-                    print("Success: \(response.result.isSuccess)")
-                    //print("Response String: \(response.result.value)")
-                    let matches = dcm.matchesForRegexInText("(\\{\"status\":\"ok\".*\\}, \\{)", text: response.result.value)
-                    let newlink = matches[0].stringByReplacingOccurrencesOfString(", {", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
-                    if let dataFromString = newlink.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
-                        var json = SwiftyJSON.JSON(data: dataFromString)
-                        print(json["id"])
-                        json["success"] = "true"
-                        resultJSON(json)
-                    }
-                    
-                    
-            }
+
             
             break
             

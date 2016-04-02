@@ -9,13 +9,15 @@
 import UIKit
 import Alamofire
 import SwiftyJSON
-class FirstViewController: UIViewController  {
+class FirstViewController: UIViewController ,UIWebViewDelegate {
     
     let dataStore=DataStore.sharedInstance
     var uiv:UIView?
     var a=0,d=0,s=0
-    @IBOutlet var w: UIWebView!
+    var queue:[String] = [String]()
     
+    @IBOutlet var w: UIWebView!
+    var web:UIWebView!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -31,18 +33,16 @@ class FirstViewController: UIViewController  {
         let requestObj = NSURLRequest(URL: url!);
         w.loadRequest(requestObj);
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("pastechanged:"), name: UIPasteboardChangedNotification, object: nil)
+        
+        web = UIWebView()
+
+        web.delegate = self;
+        
+        
     }
     
-    
-    //    func showStatus(color : UIColor){
-    //        uiv?.removeFromSuperview()
-    //        uiv = UIView(frame: CGRect(origin: CGPoint(x: (navigationController!.view.frame.size.width-(tabBarController!.tabBar.frame.width*0.6))/2, y:navigationController!.view.frame.minY), size: CGSize(width: tabBarController!.tabBar.frame.width*0.6, height: self.navigationController!.navigationBar.frame.maxY)))
-    //        uiv!.backgroundColor = color
-    //        navigationController!.view.addSubview(uiv!)
-    //
-    //    }
     func getStatus()->String{
-        return "Added:\(a)|DL:\(d)|Success:\(s)"
+        return "AD:\(a)|DL:\(d)|SC:\(s)"
     }
     
     func pastechanged(sender : NSNotification){
@@ -61,6 +61,7 @@ class FirstViewController: UIViewController  {
     func reload(){
         w.reload()
     }
+    
     func back(){
         w.goBack()
     }
@@ -68,10 +69,10 @@ class FirstViewController: UIViewController  {
     func sendRequest(youtubeLink:String){
         var newlink:String?
         if youtubeLink.rangeOfString("http://youtu.be/") != nil{
-            newlink = youtubeLink.stringByReplacingOccurrencesOfString("http://youtu.be/", withString: "https://www.yt-mp3.com/watch?v=", options: NSStringCompareOptions.LiteralSearch, range: nil)
+            newlink = youtubeLink.stringByReplacingOccurrencesOfString("http://youtu.be/", withString: "http://www.convert2mp3.cc/v/", options: NSStringCompareOptions.LiteralSearch, range: nil)
             print(newlink)
         }else if youtubeLink.rangeOfString("https://m.youtube.com/watch?v=") != nil{
-            newlink = youtubeLink.stringByReplacingOccurrencesOfString("https://m.youtube.com/watch?v=", withString: "https://www.yt-mp3.com/watch?v=", options: NSStringCompareOptions.LiteralSearch, range: nil)
+            newlink = youtubeLink.stringByReplacingOccurrencesOfString("https://m.youtube.com/watch?v=", withString: "http://www.convert2mp3.cc/v/", options: NSStringCompareOptions.LiteralSearch, range: nil)
             print(newlink)
         }
         guard let _ = newlink else{
@@ -79,23 +80,19 @@ class FirstViewController: UIViewController  {
         }
         a += 1
         self.title = getStatus()
-        DataConnectionManager.getJSON("loadData",link:newlink!,nc: self.navigationController!, resultJSON: { (result: JSON) -> Void in
-            print(result)
-            guard result["success"] == "true" else{
-                
-                return
-            }
-            print("success")
-            self.a -= 1
-            self.d += 1
-            self.title = self.getStatus()
-            self.downloadWithAlert(result["url"].stringValue)
-        })
+
+        queue.append(newlink!)
+
         
+        if queue.count == 1{
+            let urll = NSURL (string: queue[0]);
+            let requestObj2 = NSURLRequest(URL: urll!);
+            web.loadRequest(requestObj2);
+
+        }
     }
     
-    
-    private func downloadWithAlert(link:String){
+    func downloadWithAlert(link:String){
         let newString = link.stringByReplacingOccurrencesOfString("http", withString: "https", options: NSStringCompareOptions.LiteralSearch, range: nil)
         
         Alamofire.download(.GET, newString, destination: DataStore.sharedInstance.destination)
@@ -114,7 +111,7 @@ class FirstViewController: UIViewController  {
                     self.s += 1
                     self.title = self.getStatus()
                     dispatch_async(dispatch_get_main_queue()) {
-                    NSNotificationCenter.defaultCenter().postNotificationName("loadMp3", object: nil)
+                        NSNotificationCenter.defaultCenter().postNotificationName("loadMp3", object: nil)
                     }
                 }
                 
@@ -122,6 +119,51 @@ class FirstViewController: UIViewController  {
         
     }
     
+    func webViewDidFinishLoad(webView: UIWebView) {
+        print("Webview did finish load")
+        NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: "checkDownload:", userInfo: nil, repeats: true)
+    }
     
+    func checkDownload(s:NSTimer?){
+        print("check")
+        if let result = web.stringByEvaluatingJavaScriptFromString("document.documentElement.outerHTML") {
+            //print(result)
+            let matches = matchesForRegexInText("<a class=\"videohref\" href=\".*\"><", text: result)
+            if matches.count > 0 {
+                var newlink = matches[0].stringByReplacingOccurrencesOfString("<a class=\"videohref\" href=\"", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
+                newlink = newlink.stringByReplacingOccurrencesOfString("\"><", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
+                print(newlink)
+                a -= 1
+                d += 1
+                self.title = getStatus()
+                downloadWithAlert(newlink)
+                queue.removeAtIndex(0)
+                if queue.count > 0{
+                    let urll = NSURL (string: queue[0]);
+                    let requestObj2 = NSURLRequest(URL: urll!);
+                    web.loadRequest(requestObj2);
+                    a += 1
+                    self.title = getStatus()
+                    
+                }
+                s?.invalidate()
+            }
+        }
+
+    }
+    
+    func matchesForRegexInText(regex: String!, text: String!) -> [String] {
+        
+        do {
+            let regex = try NSRegularExpression(pattern: regex, options: [])
+            let nsString = text as NSString
+            let results = regex.matchesInString(text,
+                options: [], range: NSMakeRange(0, nsString.length))
+            return results.map { nsString.substringWithRange($0.range)}
+        } catch let error as NSError {
+            print("invalid regex: \(error.localizedDescription)")
+            return []
+        }
+    }
 }
 
