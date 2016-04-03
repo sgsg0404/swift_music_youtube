@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  tedMusic
+
+  Created by ted on 3/4/16.
+  Copyright © 2016 ted. All rights reserved.
+*/
+"Added" = "已加入";
+"Downloading" = "下載中";
+"Succeed" = "已成功";

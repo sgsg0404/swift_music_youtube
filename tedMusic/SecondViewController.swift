@@ -11,6 +11,8 @@ import KDEAudioPlayer
 import SwiftyJSON
 import Alamofire
 import AVFoundation
+import ESTMusicIndicator
+
 struct m {
     var name:String?
     var size:Float64?
@@ -49,17 +51,18 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     var uilbl:UILabel?
     var uiplay:UIButton?
     let gr = CAGradientLayer()
+    let gr2 = CAGradientLayer()
+    let indicator = ESTMusicIndicatorView.init()
+    let indicator2 = ESTMusicIndicatorView.init()
+    var itemName:String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
+        self.title = "Music List"
         // nav button
         self.navigationController!.navigationBar.tintColor=UIColor.redColor()
-        self.navigationItem.rightBarButtonItem=UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "loadMp3")
-        //        self.navigationItem.leftBarButtonItem=UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addMP3")
         
-        // player
         loadMp3()
         player.delegate=self
         
@@ -69,17 +72,29 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     }
     
     func setupView(){
-        let c1 = UIColor(red: 1, green: 0, blue: 0.68, alpha: 1)
-        let c2 = UIColor(red: 1, green: 0, blue: 0.11, alpha: 1)
+        let c1 = UIColor(red: 211/255.0, green: 131/255.0, blue: 18/255.0, alpha: 1)
+        let c2 = UIColor(red: 168/255.0, green: 50/255.0, blue: 121/255.0, alpha: 1)
         
+        indicator2.frame = CGRectMake((self.navigationController?.navigationBar.frame.size.width)! - 50, (self.navigationController?.navigationBar.frame.size.height)!/2-25, 50, 50)
+        indicator2.tintColor = UIColor.redColor()
+        self.navigationController?.navigationBar.addSubview(indicator2)
+        
+        indicator2.hidden = true
+        let gesture2 = UITapGestureRecognizer(target: self, action: "showPlay")
+        indicator2.addGestureRecognizer(gesture2)
+        self.navigationController?.navigationBar
         
         gr.colors = [c1.CGColor,c2.CGColor]
-        
+        gr2.colors = [c1.CGColor,c2.CGColor]
+        gr.startPoint = CGPointZero
+        gr.endPoint = CGPointMake(1, 1)
         
         
         
         //uiview
         uiv = UIView(frame: CGRect(origin: CGPoint(x: tabBarController!.tabBar.frame.minX, y:tabBarController!.tabBar.frame.minY-(tabBarController!.tabBar.frame.height*0.7)), size: CGSize(width: tabBarController!.tabBar.frame.width, height: tabBarController!.tabBar.frame.height * 0.7)))
+        let gesture = UITapGestureRecognizer(target: self, action: "hidePlay")
+        uiv?.addGestureRecognizer(gesture)
         let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Light)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = (uiv?.bounds)!
@@ -97,20 +112,35 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         let thumbImage : UIImage = UIImage(named: "glass")!
         uislider?.setThumbImage(thumbImage, forState: UIControlState.Normal )
         
-        uislider?.minimumTrackTintColor=UIColor.redColor()
+        //uislider?.minimumTrackTintColor=UIColor.redColor()
         uislider?.addTarget(self, action: "sliderTouch:", forControlEvents: .TouchDown)
         uislider?.addTarget(self, action: "sliderTouchUp:", forControlEvents: .TouchUpInside)
         
+        //test grad.
+        let tgl = CAGradientLayer()
+        let frame = CGRectMake(0, 0, (uislider?.frame.size.width)!, 5)
+        tgl.frame = frame
+        tgl.colors = [c1.CGColor,c2.CGColor]
+        tgl.startPoint = CGPointMake(0.0, 0.5)
+        tgl.endPoint = CGPointMake(1.0, 0.5)
+        
+        UIGraphicsBeginImageContextWithOptions(tgl.frame.size, tgl.opaque, 0.0);
+        tgl.renderInContext(UIGraphicsGetCurrentContext()!)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        image.resizableImageWithCapInsets(UIEdgeInsetsZero)
+        
+        uislider?.setMinimumTrackImage(image, forState: .Normal)
         
         // time label
         uilbl=UILabel(frame: CGRect(origin: CGPoint(x: uislider!.frame.midX-12, y: uislider!.frame.midY+5), size: CGSize(width: uiv!.frame.width/2, height: 15
             )))
-        uilbl?.font = UIFont(name: "Avenir-Light", size: 15.0)
-        
+        uilbl?.font = UIFont(name: "Avenir-Light", size: 12.0)
+        uilbl?.textColor = UIColor.grayColor()
         
         uiplay=UIButton(frame: CGRect(origin: CGPoint(x: 12, y: (uiv?.frame.size.height)!/2/2/2), size: CGSize(width: 30, height: 30
             )))
-        
         uiplay?.setImage(UIImage(named: "play"), forState: .Normal)
         uiplay?.addTarget(self, action: "play:",forControlEvents:.TouchUpInside)
         // add subview
@@ -120,6 +150,14 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         tabBarController?.view.addSubview(uiv!)
         
         
+    }
+    
+    func hidePlay(){
+        uiv?.hidden = true
+    }
+    
+    func showPlay(){
+        uiv?.hidden = false
     }
     
     func sliderTouch(sender:UISlider!){
@@ -151,10 +189,14 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         }
     }
     
-    @IBAction func randomPlay(sender: AnyObject) {
+    func randomPlay() {
+        
         print("rad")
         var ais  = [AudioItem]();
         for index in musics {
+            if(index.name == nil){
+                continue
+            }
             let path2 = dataStore.getPathByFileName(index.name!)
             let item = AudioItem(highQualitySoundURL: NSURL(fileURLWithPath: path2))
             item?.title = index.name!.stringByReplacingOccurrencesOfString(".mp3", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
@@ -162,6 +204,7 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         }
         ais.shuffleInPlace()
         player.playItems(ais)
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -169,7 +212,18 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         // Dispose of any resources that can be recreated.
     }
     
+    
+    override func tableView(tableView: UITableView, didUnhighlightRowAtIndexPath indexPath: NSIndexPath) {
+        print("unlight\(indexPath.row)")
+    }
+    
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if(indexPath.row == 0){
+            randomPlay()
+            self.tableView.deselectRowAtIndexPath(indexPath, animated: false)
+            return
+        }
+        
         playing=true
         uiplay!.setImage(UIImage(named: "pause"), forState: .Normal)
         let path2 = dataStore.getPathByFileName(musics[indexPath.row].name!)
@@ -184,13 +238,27 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        if indexPath.row == 0 {
+            
+            let cellIdentifier = "TableViewCell2"
+            let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! TableViewCell2
+            
+            gr.removeFromSuperlayer()
+            let h = (cell.frame.size.height * CGFloat(musics.count+20))
+            gr.frame = CGRectMake(0, -1000, self.view.frame.size.width, h+1000)
+            self.tableView.layer.insertSublayer(gr, atIndex: 0)
+            cell.backgroundColor = UIColor.clearColor()
+            return cell
+        }
+        
         // Table view cells are reused and should be dequeued using a cell identifier.
         let cellIdentifier = "TableViewCell"
         
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! TableViewCell
         cell.backgroundColor = UIColor.clearColor()
         
-        cell.lblName.text = "\(musics[indexPath.row].name!)"
+        cell.lblName.text = "\(musics[indexPath.row].name!.stringByReplacingOccurrencesOfString(".mp3", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil))"
+        cell.lblName.textColor = UIColor.whiteColor()
         
         let ti = NSInteger(musics[indexPath.row].size!)
         
@@ -200,18 +268,25 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         
         cell.time.text = "\(minutes):\(String(format: "%02d", seconds))"
         
-        if indexPath.row == 0 {
-            gr.removeFromSuperlayer()
-            let h = (cell.frame.size.height * CGFloat(musics.count+1))
-            gr.frame = CGRectMake(0, 0, self.view.frame.size.width, h)
-            self.tableView.layer.insertSublayer(gr, atIndex: 0)
+        
+        if musics[indexPath.row].name! == itemName{
+            indicator.frame = cell.indic.frame
+            cell.indic!.hidden = true
+            indicator.tintColor = UIColor.whiteColor()
+            cell.addSubview(indicator)
+            
+        }else{
+            
+            cell.indic!.hidden = false
         }
+        
         
         return cell
     }
     
     func loadMp3(){
         musics.removeAll()
+        musics.append(m())
         let files=NSFileManager().enumeratorAtPath(NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory,
             NSSearchPathDomainMask.AllDomainsMask, true)[0])
         while let file = files?.nextObject(){
@@ -227,7 +302,7 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == UITableViewCellEditingStyle.Delete {
-
+            
             
         }
     }
@@ -259,11 +334,15 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         let state = String(to)
         if state == "Paused" || state == "Stopped" {
             uiplay!.setImage(UIImage(named: "play"), forState: .Normal)
+            indicator.state = .ESTMusicIndicatorViewStatePaused
+            indicator2.state = .ESTMusicIndicatorViewStatePaused
             if state == "Stopped" {
                 uilbl?.text="0:00"
             }
         }else{
             uiplay!.setImage(UIImage(named: "pause"), forState: .Normal)
+            indicator.state = .ESTMusicIndicatorViewStatePlaying;
+            indicator2.state = .ESTMusicIndicatorViewStatePlaying;
         }
         guard state == "Playing" || state == "Paused"  else {
             uiv?.hidden=true
@@ -276,7 +355,23 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     
     func audioPlayer(audioPlayer: AudioPlayer, willStartPlayingItem item: AudioItem){
         print("start")
-        self.title = item.title
+        indicator.removeFromSuperview()
+        tableView.reloadData()
+        
+        let tabArray = self.tabBarController!.tabBar.items! as NSArray
+        let tabItem1 = tabArray.objectAtIndex(1) as! UITabBarItem
+        tabItem1.title = item.title
+        itemName = item.title! + ".mp3"
+        for var i=0;i<musics.count;i++ {
+            if musics[i].name == nil{
+                continue
+            }
+            if musics[i].name == itemName{
+                let rowToSelect:NSIndexPath = NSIndexPath(forRow: i, inSection: 0);  //slecting 0th row with 0th section
+                self.tableView.selectRowAtIndexPath(rowToSelect, animated: true, scrollPosition: UITableViewScrollPosition.None);
+                break
+            }
+        }
     }
     
     

@@ -13,6 +13,7 @@ class TableViewCell: UITableViewCell {
     
     
 
+    @IBOutlet weak var indic: UIButton!
     @IBOutlet weak var time: UILabel!
     @IBOutlet weak var lblName: UILabel!
     

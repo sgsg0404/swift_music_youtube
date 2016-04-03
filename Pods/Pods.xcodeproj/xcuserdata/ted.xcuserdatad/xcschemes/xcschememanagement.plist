@@ -9,7 +9,17 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>ESTMusicIndicator.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>KDEAudioPlayer.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Localize-Swift.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -37,7 +47,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>08A44E7450CABD0AF940D90FFDBFDA9E</key>
+		<key>14F15CCC3D90B6604AED463B528DAC74</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>1D143C82B8E22CCE9313A675270ACB3E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3CB51CC21BAFC56F670577DAB81D8A42</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>40AE7CB0EAEE40330F455BC582B11751</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -47,22 +72,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>5556B7C84B17C80007CD977615EA2141</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>681136C897B621D8275D471A92F294AA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>79C040AFDDCE1BCBF6D8B5EB0B85887F</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>8E98550CE849FD0856E11363AD668F60</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>BEADB70794F3A4A3F599034E0F91523D</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>FBFEF25BD0A9049255E64F054C3D7930</key>
 		<dict>
 			<key>primary</key>
 			<true/>

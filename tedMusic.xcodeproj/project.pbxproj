@@ -12,6 +12,7 @@
 		9F5721801C913DC900B007D1 /* DataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F57217D1C913DC900B007D1 /* DataHelper.swift */; };
 		9F5721811C913DC900B007D1 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F57217E1C913DC900B007D1 /* DataModel.swift */; };
 		9F5721821C913DC900B007D1 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F57217F1C913DC900B007D1 /* DataStore.swift */; };
+		9F74E8A11CB0F5ED00F95815 /* TableViewCell2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F74E8A01CB0F5ED00F95815 /* TableViewCell2.swift */; };
 		9FBDB6911C913B1C0002DF62 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FBDB6901C913B1C0002DF62 /* AppDelegate.swift */; };
 		9FBDB6931C913B1C0002DF62 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FBDB6921C913B1C0002DF62 /* FirstViewController.swift */; };
 		9FBDB6951C913B1C0002DF62 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FBDB6941C913B1C0002DF62 /* SecondViewController.swift */; };
@@ -20,6 +21,7 @@
 		9FBDB69D1C913B1C0002DF62 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9FBDB69B1C913B1C0002DF62 /* LaunchScreen.storyboard */; };
 		9FBDB6A81C913B1C0002DF62 /* tedMusicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FBDB6A71C913B1C0002DF62 /* tedMusicTests.swift */; };
 		9FBDB6B31C913B1C0002DF62 /* tedMusicUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FBDB6B21C913B1C0002DF62 /* tedMusicUITests.swift */; };
+		9FC728B71CB12FBD00F6F328 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9FC728B91CB12FBD00F6F328 /* Localizable.strings */; };
 		9FEDDA321C954E8100E90D48 /* DataConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FEDDA311C954E8100E90D48 /* DataConnectionManager.swift */; };
 		9FEDDA341C954E8800E90D48 /* AlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FEDDA331C954E8800E90D48 /* AlertViewController.swift */; };
 /* End PBXBuildFile section */
@@ -47,6 +49,7 @@
 		9F57217D1C913DC900B007D1 /* DataHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataHelper.swift; sourceTree = "<group>"; };
 		9F57217E1C913DC900B007D1 /* DataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		9F57217F1C913DC900B007D1 /* DataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
+		9F74E8A01CB0F5ED00F95815 /* TableViewCell2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell2.swift; sourceTree = "<group>"; };
 		9FBDB68D1C913B1C0002DF62 /* tedMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tedMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9FBDB6901C913B1C0002DF62 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9FBDB6921C913B1C0002DF62 /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
@@ -61,6 +64,10 @@
 		9FBDB6AE1C913B1C0002DF62 /* tedMusicUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tedMusicUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9FBDB6B21C913B1C0002DF62 /* tedMusicUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tedMusicUITests.swift; sourceTree = "<group>"; };
 		9FBDB6B41C913B1C0002DF62 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9FC728B21CB12DB400F6F328 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		9FC728B31CB12DB400F6F328 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "zh-Hant"; path = "zh-Hant.lproj/Main.storyboard"; sourceTree = "<group>"; };
+		9FC728B81CB12FBD00F6F328 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		9FC728BA1CB12FC000F6F328 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		9FEDDA311C954E8100E90D48 /* DataConnectionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataConnectionManager.swift; sourceTree = "<group>"; };
 		9FEDDA331C954E8800E90D48 /* AlertViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertViewController.swift; sourceTree = "<group>"; };
 		FF1F3940E723229F2CB58974 /* Pods_tedMusic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_tedMusic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -143,10 +150,12 @@
 				9FBDB6921C913B1C0002DF62 /* FirstViewController.swift */,
 				9FBDB6941C913B1C0002DF62 /* SecondViewController.swift */,
 				9F3B93A91C9547D1005EB8B6 /* TableViewCell.swift */,
+				9F74E8A01CB0F5ED00F95815 /* TableViewCell2.swift */,
 				9FBDB6991C913B1C0002DF62 /* Assets.xcassets */,
 				9F57217C1C913D9700B007D1 /* Db */,
 				9FBDB69B1C913B1C0002DF62 /* LaunchScreen.storyboard */,
 				9FBDB6961C913B1C0002DF62 /* Main.storyboard */,
+				9FC728B91CB12FBD00F6F328 /* Localizable.strings */,
 			);
 			path = tedMusic;
 			sourceTree = "<group>";
@@ -275,6 +284,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hant",
 			);
 			mainGroup = 9FBDB6841C913B1C0002DF62;
 			productRefGroup = 9FBDB68E1C913B1C0002DF62 /* Products */;
@@ -294,6 +304,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9FBDB69D1C913B1C0002DF62 /* LaunchScreen.storyboard in Resources */,
+				9FC728B71CB12FBD00F6F328 /* Localizable.strings in Resources */,
 				9FBDB69A1C913B1C0002DF62 /* Assets.xcassets in Resources */,
 				9FBDB6981C913B1C0002DF62 /* Main.storyboard in Resources */,
 			);
@@ -368,6 +379,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9F74E8A11CB0F5ED00F95815 /* TableViewCell2.swift in Sources */,
 				9F5721811C913DC900B007D1 /* DataModel.swift in Sources */,
 				9F5721821C913DC900B007D1 /* DataStore.swift in Sources */,
 				9FBDB6951C913B1C0002DF62 /* SecondViewController.swift in Sources */,
@@ -416,6 +428,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				9FBDB6971C913B1C0002DF62 /* Base */,
+				9FC728B31CB12DB400F6F328 /* zh-Hant */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -424,8 +437,18 @@
 			isa = PBXVariantGroup;
 			children = (
 				9FBDB69C1C913B1C0002DF62 /* Base */,
+				9FC728B21CB12DB400F6F328 /* zh-Hant */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		9FC728B91CB12FBD00F6F328 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9FC728B81CB12FBD00F6F328 /* en */,
+				9FC728BA1CB12FC000F6F328 /* zh-Hant */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

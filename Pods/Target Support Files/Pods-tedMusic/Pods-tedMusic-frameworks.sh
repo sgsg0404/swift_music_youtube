@@ -85,14 +85,18 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-tedMusic/Alamofire.framework"
+  install_framework "Pods-tedMusic/ESTMusicIndicator.framework"
   install_framework "Pods-tedMusic/KDEAudioPlayer.framework"
+  install_framework "Pods-tedMusic/Localize_Swift.framework"
   install_framework "Pods-tedMusic/ReachabilitySwift.framework"
   install_framework "Pods-tedMusic/SQLite.framework"
   install_framework "Pods-tedMusic/SwiftyJSON.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-tedMusic/Alamofire.framework"
+  install_framework "Pods-tedMusic/ESTMusicIndicator.framework"
   install_framework "Pods-tedMusic/KDEAudioPlayer.framework"
+  install_framework "Pods-tedMusic/Localize_Swift.framework"
   install_framework "Pods-tedMusic/ReachabilitySwift.framework"
   install_framework "Pods-tedMusic/SQLite.framework"
   install_framework "Pods-tedMusic/SwiftyJSON.framework"

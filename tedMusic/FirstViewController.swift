@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import SwiftyJSON
+import Localize_Swift
 class FirstViewController: UIViewController ,UIWebViewDelegate {
     
     let dataStore=DataStore.sharedInstance
@@ -16,10 +17,17 @@ class FirstViewController: UIViewController ,UIWebViewDelegate {
     var a=0,d=0,s=0
     var queue:[String] = [String]()
     
+    @IBOutlet weak var statusView: UIView!
+    
+    @IBOutlet weak var statuslbl: UILabel!
+    
     @IBOutlet var w: UIWebView!
     var web:UIWebView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        statusView.backgroundColor = UIColor.redColor()
+        statusView.hidden = true
+        self.title = "Youtube"
         // Do any additional setup after loading the view, typically from a nib.
         self.navigationController!.navigationBar.tintColor=UIColor.redColor()
         self.navigationItem.rightBarButtonItem=UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "reload")
@@ -38,11 +46,13 @@ class FirstViewController: UIViewController ,UIWebViewDelegate {
 
         web.delegate = self;
         
-        
     }
     
     func getStatus()->String{
-        return "AD:\(a)|DL:\(d)|SC:\(s)"
+        if statusView.hidden == true {
+            statusView.hidden = false
+        }
+        return "\("Added".localized()):\(a)   \("Downloading".localized()):\(d)   \("Succeed".localized()):\(s)"
     }
     
     func pastechanged(sender : NSNotification){
@@ -79,7 +89,7 @@ class FirstViewController: UIViewController ,UIWebViewDelegate {
             return;
         }
         a += 1
-        self.title = getStatus()
+        self.statuslbl.text = getStatus()
 
         queue.append(newlink!)
 
@@ -109,7 +119,7 @@ class FirstViewController: UIViewController ,UIWebViewDelegate {
                     print("Downloaded file successfully")
                     self.d -= 1
                     self.s += 1
-                    self.title = self.getStatus()
+                    self.statuslbl.text = self.getStatus()
                     dispatch_async(dispatch_get_main_queue()) {
                         NSNotificationCenter.defaultCenter().postNotificationName("loadMp3", object: nil)
                     }
@@ -135,7 +145,7 @@ class FirstViewController: UIViewController ,UIWebViewDelegate {
                 print(newlink)
                 a -= 1
                 d += 1
-                self.title = getStatus()
+                self.statuslbl.text = getStatus()
                 downloadWithAlert(newlink)
                 queue.removeAtIndex(0)
                 if queue.count > 0{
@@ -143,8 +153,6 @@ class FirstViewController: UIViewController ,UIWebViewDelegate {
                     let requestObj2 = NSURLRequest(URL: urll!);
                     web.loadRequest(requestObj2); 
                 }
-                a += 1
-                self.title = getStatus()
                 s?.invalidate()
             }
         }
