@@ -7,15 +7,17 @@
 //
 
 import UIKit
+import ESTMusicIndicator
 
 class TableViewCell2: UITableViewCell {
     // MARK: Properties
     
-    
+    var indicator:ESTMusicIndicatorView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
     }
     
     override func setSelected(selected: Bool, animated: Bool) {

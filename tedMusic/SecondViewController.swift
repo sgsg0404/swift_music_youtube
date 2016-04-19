@@ -45,16 +45,15 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     let  player = AudioPlayer()
     var musics = [m]()
     let dataStore=DataStore.sharedInstance
-    var playing:Bool=false
     var uiv:UIView?
     var uislider:UISlider?
     var uilbl:UILabel?
+    var sliderTouch:Bool = false
     var uiplay:UIButton?
     let gr = CAGradientLayer()
-    let gr2 = CAGradientLayer()
-    let indicator = ESTMusicIndicatorView.init()
     let indicator2 = ESTMusicIndicatorView.init()
     var itemName:String?
+    var showSlider:Bool = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,7 +67,37 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         
         // view
         setupView()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("loadMp3"), name: "loadMp3", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("loadMp3Withreload"), name: "loadMp3", object: nil)
+    }
+    
+    func loadMp3Withreload(){
+        loadMp3()
+        reload()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        reload()
+    }
+    
+    func reload(){
+        if String(player.state) == "Playing" {
+            indicator2.state = .ESTMusicIndicatorViewStatePlaying
+        }else{
+            indicator2.state = .ESTMusicIndicatorViewStatePaused
+        }
+        self.tableView.reloadData()
+        
+        for var i=0;i<musics.count;i++ {
+            if musics[i].name == nil{
+                continue
+            }
+            if musics[i].name == itemName{
+                let rowToSelect:NSIndexPath = NSIndexPath(forRow: i, inSection: 0);  //slecting 0th row with 0th section
+                self.tableView.selectRowAtIndexPath(rowToSelect, animated: true, scrollPosition: UITableViewScrollPosition.None);
+                break
+            }
+        }
+        
     }
     
     func setupView(){
@@ -85,7 +114,6 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         self.navigationController?.navigationBar
         
         gr.colors = [c1.CGColor,c2.CGColor]
-        gr2.colors = [c1.CGColor,c2.CGColor]
         gr.startPoint = CGPointZero
         gr.endPoint = CGPointMake(1, 1)
         
@@ -115,7 +143,8 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         //uislider?.minimumTrackTintColor=UIColor.redColor()
         uislider?.addTarget(self, action: "sliderTouch:", forControlEvents: .TouchDown)
         uislider?.addTarget(self, action: "sliderTouchUp:", forControlEvents: .TouchUpInside)
-        
+        uislider?.addTarget(self, action: "sliderTouchUp2:", forControlEvents: .TouchCancel)
+        uislider?.addTarget(self, action: "sliderValueChanged:", forControlEvents: .ValueChanged)
         //test grad.
         let tgl = CAGradientLayer()
         let frame = CGRectMake(0, 0, (uislider?.frame.size.width)!, 5)
@@ -153,20 +182,38 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     }
     
     func hidePlay(){
-        uiv?.hidden = true
+        if !sliderTouch{
+            uiv?.hidden = true
+        }
     }
     
     func showPlay(){
         uiv?.hidden = false
+        self.tableView.editing = !self.tableView.editing
+        reload()
     }
     
     func sliderTouch(sender:UISlider!){
-        player.pause()
     }
     
     func sliderTouchUp(sender:UISlider!){
+        print("up")
+        if sliderTouch {
+            sliderTouch = false
+        }
+    }
+    
+    func sliderTouchUp2(sender:UISlider!){
+        print("up2")
+        if sliderTouch {
+            sliderTouch = false
+        }
+    }
+    
+    func sliderValueChanged(sender:UISlider!){
+        print("change")
+        sliderTouch = true
         player.seekToTime(NSTimeInterval(sender.value / 100 * Float(player.currentItemDuration!)))
-        player.resume()
     }
     
     func play(sender: AnyObject) {
@@ -176,16 +223,6 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
             player.pause()
         }else{
             player.resume()
-        }
-    }
-    
-    func handlePlayButton(){
-        if playing == true {
-            player.pause()
-            playing=false
-        }else{
-            player.resume()
-            playing=true
         }
     }
     
@@ -213,10 +250,6 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     }
     
     
-    override func tableView(tableView: UITableView, didUnhighlightRowAtIndexPath indexPath: NSIndexPath) {
-        print("unlight\(indexPath.row)")
-    }
-    
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if(indexPath.row == 0){
             randomPlay()
@@ -224,13 +257,13 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
             return
         }
         
-        playing=true
-        uiplay!.setImage(UIImage(named: "pause"), forState: .Normal)
         let path2 = dataStore.getPathByFileName(musics[indexPath.row].name!)
         let item = AudioItem(highQualitySoundURL: NSURL(fileURLWithPath: path2))
         item?.title = musics[indexPath.row].name!.stringByReplacingOccurrencesOfString(".mp3", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
         player.playItems([item!])
         
+        let cell = tableView.cellForRowAtIndexPath(indexPath) as! TableViewCell
+        cell.indicator.state = .ESTMusicIndicatorViewStatePlaying
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -248,6 +281,8 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
             gr.frame = CGRectMake(0, -1000, self.view.frame.size.width, h+1000)
             self.tableView.layer.insertSublayer(gr, atIndex: 0)
             cell.backgroundColor = UIColor.clearColor()
+            
+            
             return cell
         }
         
@@ -265,21 +300,23 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         let seconds = ti % 60
         let minutes = (ti / 60) % 60
         
-        
         cell.time.text = "\(minutes):\(String(format: "%02d", seconds))"
-        
+        cell.indicator.frame = cell.indic.frame
+        cell.addSubview(cell.indicator)
         
         if musics[indexPath.row].name! == itemName{
-            indicator.frame = cell.indic.frame
-            cell.indic!.hidden = true
-            indicator.tintColor = UIColor.whiteColor()
-            cell.addSubview(indicator)
-            
+            cell.indicator.state = indicator2.state
+            cell.indic.hidden = true
         }else{
-            
-            cell.indic!.hidden = false
+            cell.indicator.state = .ESTMusicIndicatorViewStateStopped
+            cell.indic.hidden = false
         }
         
+        
+        if self.tableView.editing {
+            cell.indicator.state = .ESTMusicIndicatorViewStateStopped
+            cell.indic.hidden = false
+        }
         
         return cell
     }
@@ -300,21 +337,39 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         self.tableView.reloadData()
     }
     
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == UITableViewCellEditingStyle.Delete {
-            
-            
+    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        if indexPath.row == 0 {
+            return false
         }
+        if (self.tableView.editing) {
+            return true
+        }else{
+            return false
+        }
+        
+    }
+    
+    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+        let m = musics[sourceIndexPath.row]
+        musics.removeAtIndex(sourceIndexPath.row)
+        musics.insert(m, atIndex: destinationIndexPath.row)
     }
     
     override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]?  {
         // add the action button you want to show when swiping on tableView's cell , in this case add the delete button.
+        
         let deleteAction = UITableViewRowAction(style: .Default, title: "Delete", handler: { (action , indexPath) -> Void in
+            if self.musics[indexPath.row].name == self.itemName{
+                self.player.stop()
+                self.itemName = nil
+                self.uiv?.hidden = true
+            }
             DataStore.sharedInstance.removeFile(self.musics[indexPath.row].name!)
             self.loadMp3()
-            if(self.musics.count == 0 ){
-                self.gr.removeFromSuperlayer()
-            }
         })
         
         // You can set its properties like normal button
@@ -330,48 +385,42 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     }
     
     func audioPlayer(audioPlayer: AudioPlayer, didChangeStateFrom from: AudioPlayerState, toState to: AudioPlayerState){
-        print("change state\(to)")
+        
+        print(String(to))
+        
         let state = String(to)
+        
+        
         if state == "Paused" || state == "Stopped" {
             uiplay!.setImage(UIImage(named: "play"), forState: .Normal)
-            indicator.state = .ESTMusicIndicatorViewStatePaused
             indicator2.state = .ESTMusicIndicatorViewStatePaused
             if state == "Stopped" {
                 uilbl?.text="0:00"
             }
-        }else{
+            
+        }
+        if state == "Playing" {
             uiplay!.setImage(UIImage(named: "pause"), forState: .Normal)
-            indicator.state = .ESTMusicIndicatorViewStatePlaying;
             indicator2.state = .ESTMusicIndicatorViewStatePlaying;
         }
-        guard state == "Playing" || state == "Paused"  else {
-            uiv?.hidden=true
+        
+        reload()
+        
+        guard showSlider else {
             return
         }
+        showSlider = false
         uiv?.hidden=false
         
     }
     
     
     func audioPlayer(audioPlayer: AudioPlayer, willStartPlayingItem item: AudioItem){
-        print("start")
-        indicator.removeFromSuperview()
-        tableView.reloadData()
-        
         let tabArray = self.tabBarController!.tabBar.items! as NSArray
         let tabItem1 = tabArray.objectAtIndex(1) as! UITabBarItem
         tabItem1.title = item.title
         itemName = item.title! + ".mp3"
-        for var i=0;i<musics.count;i++ {
-            if musics[i].name == nil{
-                continue
-            }
-            if musics[i].name == itemName{
-                let rowToSelect:NSIndexPath = NSIndexPath(forRow: i, inSection: 0);  //slecting 0th row with 0th section
-                self.tableView.selectRowAtIndexPath(rowToSelect, animated: true, scrollPosition: UITableViewScrollPosition.None);
-                break
-            }
-        }
+        reload()
     }
     
     
@@ -386,7 +435,6 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
     
     
     func audioPlayer(audioPlayer: AudioPlayer, didFindDuration duration: NSTimeInterval, forItem item: AudioItem){
-        print("duration:\(duration)")
     }
     
     
@@ -399,6 +447,15 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         //print("timerange")
     }
     
+    override func canBecomeFirstResponder() -> Bool {
+        return true
+    }
+    
+    override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
+        if motion == .MotionShake {
+            player.next()
+        }
+    }
     
     
     

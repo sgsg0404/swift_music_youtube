@@ -17,7 +17,7 @@
                BlueprintIdentifier = "9FBDB68C1C913B1C0002DF62"
                BuildableName = "tedMusic.app"
                BlueprintName = "tedMusic"
-               ReferencedContainer = "container:tedMusic.xcodeproj">
+               ReferencedContainer = "container:m.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
                BlueprintIdentifier = "9FBDB6A21C913B1C0002DF62"
                BuildableName = "tedMusicTests.xctest"
                BlueprintName = "tedMusicTests"
-               ReferencedContainer = "container:tedMusic.xcodeproj">
+               ReferencedContainer = "container:m.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -45,7 +45,7 @@
                BlueprintIdentifier = "9FBDB6AD1C913B1C0002DF62"
                BuildableName = "tedMusicUITests.xctest"
                BlueprintName = "tedMusicUITests"
-               ReferencedContainer = "container:tedMusic.xcodeproj">
+               ReferencedContainer = "container:m.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,7 +55,7 @@
             BlueprintIdentifier = "9FBDB68C1C913B1C0002DF62"
             BuildableName = "tedMusic.app"
             BlueprintName = "tedMusic"
-            ReferencedContainer = "container:tedMusic.xcodeproj">
+            ReferencedContainer = "container:m.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -78,7 +78,7 @@
             BlueprintIdentifier = "9FBDB68C1C913B1C0002DF62"
             BuildableName = "tedMusic.app"
             BlueprintName = "tedMusic"
-            ReferencedContainer = "container:tedMusic.xcodeproj">
+            ReferencedContainer = "container:m.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -97,7 +97,7 @@
             BlueprintIdentifier = "9FBDB68C1C913B1C0002DF62"
             BuildableName = "tedMusic.app"
             BlueprintName = "tedMusic"
-            ReferencedContainer = "container:tedMusic.xcodeproj">
+            ReferencedContainer = "container:m.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

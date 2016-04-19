@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:tedMusic.xcodeproj">
+      location = "group:/Users/ted/Desktop/swift_music_youtube/m.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">

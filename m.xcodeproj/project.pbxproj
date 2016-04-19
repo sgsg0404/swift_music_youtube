@@ -50,6 +50,7 @@
 		9F57217E1C913DC900B007D1 /* DataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		9F57217F1C913DC900B007D1 /* DataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		9F74E8A01CB0F5ED00F95815 /* TableViewCell2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell2.swift; sourceTree = "<group>"; };
+		9F811C6E1CB32158004D2F8E /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Main.strings"; sourceTree = "<group>"; };
 		9FBDB68D1C913B1C0002DF62 /* tedMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tedMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9FBDB6901C913B1C0002DF62 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9FBDB6921C913B1C0002DF62 /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
@@ -65,7 +66,6 @@
 		9FBDB6B21C913B1C0002DF62 /* tedMusicUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tedMusicUITests.swift; sourceTree = "<group>"; };
 		9FBDB6B41C913B1C0002DF62 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9FC728B21CB12DB400F6F328 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		9FC728B31CB12DB400F6F328 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "zh-Hant"; path = "zh-Hant.lproj/Main.storyboard"; sourceTree = "<group>"; };
 		9FC728B81CB12FBD00F6F328 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		9FC728BA1CB12FC000F6F328 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		9FEDDA311C954E8100E90D48 /* DataConnectionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataConnectionManager.swift; sourceTree = "<group>"; };
@@ -277,7 +277,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 9FBDB6881C913B1C0002DF62 /* Build configuration list for PBXProject "tedMusic" */;
+			buildConfigurationList = 9FBDB6881C913B1C0002DF62 /* Build configuration list for PBXProject "m" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -428,7 +428,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				9FBDB6971C913B1C0002DF62 /* Base */,
-				9FC728B31CB12DB400F6F328 /* zh-Hant */,
+				9F811C6E1CB32158004D2F8E /* zh-Hant */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -620,7 +620,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		9FBDB6881C913B1C0002DF62 /* Build configuration list for PBXProject "tedMusic" */ = {
+		9FBDB6881C913B1C0002DF62 /* Build configuration list for PBXProject "m" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9FBDB6B51C913B1C0002DF62 /* Debug */,

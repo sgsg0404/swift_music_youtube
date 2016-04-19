@@ -7,11 +7,12 @@
 //
 
 import UIKit
+import ESTMusicIndicator
 
 class TableViewCell: UITableViewCell {
     // MARK: Properties
     
-    
+        var indicator:ESTMusicIndicatorView!
 
     @IBOutlet weak var indic: UIButton!
     @IBOutlet weak var time: UILabel!
@@ -20,6 +21,10 @@ class TableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        indicator = ESTMusicIndicatorView.init()
+        indicator.tintColor = UIColor.whiteColor()
+        indicator.backgroundColor = UIColor.clearColor()
+        
     }
     
     override func setSelected(selected: Bool, animated: Bool) {
