@@ -68,6 +68,8 @@ class SecondViewController: UITableViewController, AudioPlayerDelegate  {
         // view
         setupView()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("loadMp3Withreload"), name: "loadMp3", object: nil)
+        let uiv_block = UIView(frame: CGRect(x: 0, y: 0, width: (uiv?.frame.size.width)!, height: (uiv?.frame.size.height)!))
+        self.tableView.tableFooterView=uiv_block;
     }
     
     func loadMp3Withreload(){

@@ -108,6 +108,7 @@ class FirstViewController: UIViewController ,UIWebViewDelegate {
         Alamofire.download(.GET, newString, destination: DataStore.sharedInstance.destination)
             .progress { bytesRead, totalBytesRead, totalBytesExpectedToRead in
                 dispatch_async(dispatch_get_main_queue()) {
+                    print(bytesRead)
                 }
             }
             .response { request, response, _, error in
@@ -138,7 +139,7 @@ class FirstViewController: UIViewController ,UIWebViewDelegate {
         print("check")
         if let result = web.stringByEvaluatingJavaScriptFromString("document.documentElement.outerHTML") {
             //print(result)
-            let matches = matchesForRegexInText("<a class=\"videohref\" href=\".*\"><", text: result)
+            let matches = FirstViewController.matchesForRegexInText("<a class=\"videohref\" href=\".*\"><", text: result)
             if matches.count > 0 {
                 var newlink = matches[0].stringByReplacingOccurrencesOfString("<a class=\"videohref\" href=\"", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
                 newlink = newlink.stringByReplacingOccurrencesOfString("\"><", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
@@ -159,7 +160,7 @@ class FirstViewController: UIViewController ,UIWebViewDelegate {
 
     }
     
-    func matchesForRegexInText(regex: String!, text: String!) -> [String] {
+    static func matchesForRegexInText(regex: String!, text: String!) -> [String] {
         
         do {
             let regex = try NSRegularExpression(pattern: regex, options: [])

@@ -166,6 +166,35 @@
             </objects>
             <point key="canvasLocation" x="1556" y="360"/>
         </scene>
+        <!--Mp 3komplit-->
+        <scene sceneID="YkM-Yu-zfN">
+            <objects>
+                <tableViewController id="z5U-qE-9A9" customClass="Mp3komplit" customModule="tedMusic" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="xhy-s4-anr">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="mp3Cell" id="32R-VZ-nXr">
+                                <rect key="frame" x="0.0" y="92" width="600" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="32R-VZ-nXr" id="tEe-Bc-7Yl">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="z5U-qE-9A9" id="EZ2-jo-CbI"/>
+                            <outlet property="delegate" destination="z5U-qE-9A9" id="6XC-TA-1xI"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="LGS-8T-361"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XJw-Jd-Us7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2368" y="1121"/>
+        </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">
             <objects>
@@ -184,6 +213,7 @@
                     <connections>
                         <segue destination="5HH-g0-xKu" kind="relationship" relationship="viewControllers" id="u7Y-xg-7CH"/>
                         <segue destination="rXh-C5-Pry" kind="relationship" relationship="viewControllers" id="lzU-1b-eKA"/>
+                        <segue destination="sEl-ee-Kda" kind="relationship" relationship="viewControllers" id="3bd-vY-mvN"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
@@ -228,8 +258,28 @@
             </objects>
             <point key="canvasLocation" x="750" y="360"/>
         </scene>
+        <!--Mp3Komplit-->
+        <scene sceneID="w9o-AH-gCu">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="sEl-ee-Kda" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Mp3Komplit" image="first" id="fFN-JV-A7u"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="A8h-6h-rEp">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="z5U-qE-9A9" kind="relationship" relationship="rootViewController" id="Kec-he-DUM"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OMw-t2-7aO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="688" y="1169"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="first" width="30" height="30"/>
         <image name="ha" width="30" height="30"/>
         <image name="shuffle" width="30" height="30"/>
         <image name="u" width="30" height="30"/>
