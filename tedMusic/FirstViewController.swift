@@ -103,9 +103,18 @@ class FirstViewController: UIViewController ,UIWebViewDelegate {
     }
     
     func downloadWithAlert(link:String){
+        var localPath: NSURL?
         let newString = link.stringByReplacingOccurrencesOfString("http", withString: "https", options: NSStringCompareOptions.LiteralSearch, range: nil)
         
-        Alamofire.download(.GET, newString, destination: DataStore.sharedInstance.destination)
+        Alamofire.download(.GET, newString, destination: { (temporaryURL, response) in
+            let directoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
+            
+            let pathComponent = response.suggestedFilename!.stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
+            print(pathComponent)
+            localPath = directoryURL.URLByAppendingPathComponent(pathComponent)
+            return localPath!
+            
+        })
             .progress { bytesRead, totalBytesRead, totalBytesExpectedToRead in
                 dispatch_async(dispatch_get_main_queue()) {
                     print(bytesRead)

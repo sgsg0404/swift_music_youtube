@@ -19,5 +19,53 @@
             landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "tedMusic/FirstViewController.swift"
+            timestampString = "483269594.595605"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "112"
+            endingLineNumber = "112"
+            landmarkName = "downloadWithAlert(_:)"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "tedMusic.FirstViewController.(downloadWithAlert (tedMusic.FirstViewController) -&gt; (Swift.String) -&gt; ()).(closure #1)"
+                  moduleName = "tedMusic"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ted/Desktop/swift_music_youtube/tedMusic/FirstViewController.swift"
+                  timestampString = "483269594.606204"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "112"
+                  endingLineNumber = "112"
+                  offsetFromSymbolStart = "282">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "tedMusic.FirstViewController.(downloadWithAlert (tedMusic.FirstViewController) -&gt; (Swift.String) -&gt; ()).(closure #1).(closure #1)"
+                  moduleName = "tedMusic"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ted/Desktop/swift_music_youtube/tedMusic/FirstViewController.swift"
+                  timestampString = "483269594.606405"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "112"
+                  endingLineNumber = "112"
+                  offsetFromSymbolStart = "125">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>
